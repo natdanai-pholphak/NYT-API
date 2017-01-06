@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Simple New York Times</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+<body ng-app="MyApp" ng-controller="ArticleListController as ctrl">
+	<div class="container" id="list">
+		<div class="modal fade" id="myModal" role="dialog">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<h1 class="text-info text-center"><span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Loading...</h1>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-6 col-sm-5 col-md-3">
+				<input type="text" class="form-control" placeholder="Search" ng-model="ctrl.search">
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-5 col-md-3"><div class="input-group">
+				<span class="input-group-addon">Period: </span>
+				<select class="form-control" ng-model="ctrl.period">
+					<option value="1">1</option>
+					<option value="7">7</option>
+					<option value="30">30</option>
+				</select>
+			</div></div>
+			<div class="col-xs-5 col-md-3"><div class="input-group">
+				<span class="input-group-addon">Section: </span>
+				<select class="form-control" ng-model="ctrl.section" ng-options="item for item in ctrl.sections"></select>
+			</div></div>
+			<div class="col-xs-2">
+				<button type="button" class="btn btn-primary" ng-click="ctrl.reloadArticle()">Update</button>
+			</div>
+		</div>
+		<div class="row" ng-if="ctrl.error">
+			<h4 class="text-danger">{{ctrl.error}}</h4>
+			<button class="btn btn-primary" ng-click="ctrl.reloadArticle()">Reload</button>
+		</div>
+		<div class="row">
+			<div class="media" ng-repeat="article in ctrl.articles | filter:{title: ctrl.search}">
+				<div class="media-left">
+					<a href="#" ng-click="ctrl.show($index)"><img class="media-object" src="{{ctrl.selectImage(article.media[0]['media-metadata'], 'Standard Thumbnail')}}" alt="No Picture" height="75" width="75"></a>
+				</div>
+				<div class="media-body media-middle">
+					<h4 class="media-heading text-primary"><span class="label label-success">{{article.section}}</span> {{article.title}}</h4>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="detail" class="container">
+		<div class="row">
+			<div class="col-sm-6 col-lg-5">
+				<img class="img-responsive img-rounded center-block" src="{{ctrl.selectImage(ctrl.article.media[0]['media-metadata'], 'square320')}}">
+				<p class="text-center text-muted"><small>{{ctrl.article.media[0].copyright}}</small></p>
+			</div>
+			<div class="col-sm-6 col-lg-5">
+				<h3 class="text-primary">{{ctrl.article.title}}</h3>
+				<p><span class="label label-success">{{ctrl.article.published_date}}</span> <span class="label label-warning">{{ctrl.article.section}}</span></p>
+				<p>{{ctrl.article.abstract}} <a href="{{ctrl.article.url}}" target="_blank"><span class="label label-primary">read more</span></a></p>
+				<p class="text-muted text-right">{{ctrl.article.byline}}</p>
+				<button type="button" class="btn btn-default" ng-click="ctrl.back()">Back</button>
+			</div>
+		</div>
+	</div>
+	
+	<script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
+	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="js/angular.min.js"></script>
+	<script type="text/javascript" src="js/app.js"></script>
+</body>
+
+</html>
